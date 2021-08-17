@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
     - name: nodeapp
-      image: ramgram/nodeapp:v1
+      image: ramgram/nodeapp:tagversion
       ports:
         - containerPort: 8080
