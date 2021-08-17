@@ -16,6 +16,22 @@ pipeline{
                   sh "docker push ramgram/nodeapp:${DOCKER_TAG}"
                }
             }
+        }
+        stage('Deploy to k8s'){
+            steps{
+               sh "chmod +x changeTag.sh"
+               sh "./changeTag.sh ${DOCKER_TAG}"
+               sshagent(['kops']) {
+                   sh "scp -o StrictHostKeyChecking=no service.yml node-app-pod.yml ec2-user@54.157.146.244:/home/ec2-user/"
+                   script{
+                       try{
+                           sh "ssh ec2-user@54.157.146.244 kubectl apply -f ."
+                       }catch(error){
+                           sh "ssh ec2-user@54.157.146.244 kubectl create -f ."
+                       }
+                   }
+               }
+            }
         }        
     }
 }
