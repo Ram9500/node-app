@@ -9,6 +9,14 @@ pipeline{
                 sh"docker build . -t ramgram/nodeapp:${DOCKER_TAG}"
             }
         }
+        stage('DockerHub Push'){
+            steps{
+                withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerHubPwd')]) {
+                  sh "docker login -u ramgram -p ${dockerHubPwd}"
+                  sh "docker push ramgram/nodeapp:${DOCKER_TAG}"
+               }
+            }
+        }        
     }
 }
 def getDockerTag(){
