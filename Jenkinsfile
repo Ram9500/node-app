@@ -17,17 +17,7 @@ pipeline{
                }
             }
         }
-        stage('Deploy to k8s'){
-            steps{
-               sh "chmod +x changeTag.sh"
-               sh "./changeTag.sh ${DOCKER_TAG}"
-               sshagent(['kops']) {
-                   sh "scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml ec2-user@54.157.146.244:/home/ec2-user/"                   
-                   }
-               }
-            }
-        }        
-    }
+       
 def getDockerTag(){
     def tag  = sh script: 'git rev-parse HEAD', returnStdout: true
     return tag
